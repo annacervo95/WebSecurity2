@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="https://www.thymeleaf.org" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realm-Plants</title>
+    <link rel="stylesheet" href="../static/addplantstyle.css" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet' > 
+    <script th:inline="javascript">
+        function homeClick(){
+            console.log("premuto");
+            window.location.href = '/admin/getplants';
+        } 
+    </script>
+</head>
+<body>
+
+    <script>
+        function validateFile() {
+            var fileInput = document.getElementById('fileUploadInput');
+
+            fileInput.addEventListener('change', function() {
+                var files = fileInput.files;
+                var maxFileSize = 1 * 1024 * 1024; // 1 MB
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    if (file.size > maxFileSize) {
+                        alert('La dimensione del file supera il limite consentito.');
+                        fileInput.value = ''; // Reimposta il valore del campo di input del file
+                        return;
+                    }
+                }
+            });
+        }
+
+        // Chiamata a validateFile() all'avvio della pagina
+        window.onload = function() {
+            validateFile();
+        };
+    </script>
+
+    <!-- Aggiungi questo script per mostrare un alert JavaScript -->
+    <script th:if="${error}">
+        window.onload = function() {
+            alert("[[${error}]]");
+            window.location.href = '/admin/addplant';   
+        };
+    </script>
+
+    <!-- Header -->
+    <header>
+        <div class="nav container">
+            <a href="" class="logo">Realm-Plants <i class='bx bx-leaf'></i></a> 
+            <i class='bx bx-home' id="home-icon" onclick="homeClick()"></i>
+        </div> 
+    </header>
+
+    <div class="file-container">
+        <div class="file-upload-header">
+            <h2>Aggiungi nuova pianta</h2>
+        </div>
+        <div class="file-upload">
+            <h3></h3>
+            <form id="fileUploadForm" method="POST" th:action="@{/admin/uploadplant}" enctype="multipart/form-data">
+                <input type="text" name="name" placeholder="Inserire nome pianta" pattern="[A-Za-z ]+" title="Inserisci un nome valido (solo lettere e spazi)" required />
+                <input type="text" name="altezza" placeholder="Inserire altezza in cm" pattern="^\d+(.\d+)?$" title="Inserisci una altezza valida (valore numerico con punto come separatore decimale)" required /> 
+                <input type="text" name="prezzo" placeholder="Inserire il prezzo" pattern="^\d+(.\d+)?$" title="Inserisci un prezzo valido (valore numerico con punto come separatore decimale)" required />
+                <input type="file" id="fileUploadInput" class="file-input" name="immagine" accept="image/*" required />
+                <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />  se ho capito bene inserendo thymeleaf posso evitare di inserire questo input, xk lo mada direttamente lui-->
+                <input type="submit" class="submit-btn" value="Aggiungi" />
+
+            </form>
+        </div> 
+    </div>   
+</body>
+</html>
+
